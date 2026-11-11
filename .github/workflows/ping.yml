@@ -2,11 +2,15 @@ name: ping
 on:
   workflow_dispatch:
 jobs:
-  ubuntu:
-    runs-on: ubuntu-latest
+  m13:
+    runs-on: macos-13
     steps:
-      - run: echo "ubuntu ok"
-  macos:
+      - run: sw_vers; xcodebuild -version
+  m15:
+    runs-on: macos-15
+    steps:
+      - run: sw_vers; xcodebuild -version
+  m14x:
     runs-on: macos-14
     steps:
-      - run: echo "macos ok"; sw_vers
+      - run: sw_vers; xcodebuild -version
