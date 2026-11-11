@@ -2,15 +2,21 @@ name: ping
 on:
   workflow_dispatch:
 jobs:
-  m13:
-    runs-on: macos-13
-    steps:
-      - run: sw_vers; xcodebuild -version
-  m15:
+  x:
     runs-on: macos-15
     steps:
-      - run: sw_vers; xcodebuild -version
-  m14x:
-    runs-on: macos-14
-    steps:
-      - run: sw_vers; xcodebuild -version
+      - name: installed Xcodes
+        run: ls -d /Applications/Xcode*.app 2>/dev/null || echo none
+      - name: downloadable Xcode 15 builds
+        run: |
+          curl -sS -m 40 https://xcodereleases.com/data.json -o /tmp/x.json
+          python3 - <<'PY'
+import json
+d = json.load(open('/tmp/x.json'))
+for r in d:
+    v = r.get('version', {})
+    if str(v.get('major')) == '15' and r.get('release', {}).get('release'):
+        name = v.get('name') or f"{v.get('major')}.{v.get('minor')}.{v.get('patch')}"
+        url = (r.get('links', {}).get('download') or {}).get('url')
+        print('XCODE15', name, url)
+PY
