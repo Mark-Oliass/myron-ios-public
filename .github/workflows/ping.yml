@@ -6,11 +6,11 @@ jobs:
     runs-on: macos-15
     timeout-minutes: 40
     steps:
-    - name: install xcodes
-      run: brew install xcodesorg/made/xcodes
-    - name: list installable
-      run: xcodes list 2>&1 | grep -E '^15\.' | head -10
-    - name: install Xcode 15.4
-      run: xcodes install 15.4 --experimental-unxip || xcodes install 15.4
+    - name: which xcodes
+      run: which xcodes && xcodes version || true
+    - name: list 15.x
+      run: xcodes list 2>&1 | grep -E '^ *15\.' | head -10 || true
+    - name: install 15.4
+      run: xcodes install 15.4 --no-install 2>&1 | tail -3; echo '--- now real install ---'; yes | xcodes install 15.4 2>&1 | tail -20 || true
     - name: verify
-      run: ls -d /Applications/Xcode*.app; xcodes installed
+      run: ls -d /Applications/Xcode*.app; xcodes installed || true
